@@ -237,11 +237,6 @@ protected override void Draw (GameTime gameTime)
 
 ## <a name="rendering-with-a-texture"></a>使用纹理渲染
 
-此时我们的应用程序呈现白色平面 （在角度来看）。 接下来我们将添加到我们的项目以呈现我们平面时使用的纹理。 
-
-为了简单起见，我们将直接向我们的项目，而不是使用 MonoGame 管道工具添加.png。 若要执行此操作，请下载[此.png 文件](https://github.com/xamarin/mobile-samples/blob/master/ModelRenderingMG/Resources/checkerboard.png?raw=true)到您的计算机。 下载完成后，右键单击**内容**在解决方案面板中，选择文件夹**添加 > 添加文件...** . 如果使用 Android 上，然后此文件夹将位于下面**资产**特定于 Android 的项目文件夹中。 如果在 iOS 上，则此文件夹将在 iOS 项目的根目录中。 导航到的位置， **checkerboard.png**保存和选择此文件。 选择此选项可以将文件复制到的目录。
-
-接下来，我们将添加代码以创建我们`Texture2D`实例。 首先，添加`Texture2D`的成员`Game1`下`BasicEffect`实例：
 
 此时，我们的应用程序渲染出了一个白色平面（在透视模式下）。 接下来，我们将为渲染平面时使用的项目添加纹理。
 
@@ -276,7 +271,7 @@ protected override void LoadContent()
 }
 ```
 
-接下来，修改`DrawGround`方法。 唯一必要的修改是将分配`effect.TextureEnabled`到`true`并设置`effect.Texture`到`checkerboardTexture`:
+接下来，修改`DrawGround`方法。 唯一必要的修改是将`effect.TextureEnabled`赋值为`true`并将`effect.Texture`设置为`checkerboardTexture`：
 
 ```csharp
 void DrawGround()
@@ -316,7 +311,8 @@ void DrawGround()
 }
 ```
 
-最后，我们需要修改`Game1.Initialize`方法还将指定纹理坐标上我们的顶点：
+最后，我们需要修改`Game1.Initialize`方法以在顶点上指定纹理坐标：
+
 
 
 ```csharp
@@ -347,19 +343,20 @@ protected override void Initialize ()
 } 
 ```
 
-如果我们运行此代码，我们可以看到我们平面现在显示棋盘图案：
+如果我们运行此代码，我们可以看到我们的平面现在会显示出一个棋盘图案：
+
 
 ![](part2-images/image8.png "在平面现在显示棋盘图案")
 
 ## <a name="modifying-texture-coordinates"></a>修改纹理坐标
 
-MonoGame 使用规范化是介于 0 和 1 之间，而不是 0 和纹理的宽度或高度之间的坐标的纹理坐标。 下图可帮助可视化规范化的坐标：
+MonoGame 使用归一化纹理坐标，即坐标在 0 到 1 之间，而不是 0 到纹理的宽度或高度之间。 下图有助于来可视化归一化的坐标：
 
 ![](part2-images/image9.png "此图可以帮助可视化规范化的坐标")
 
-标准化的纹理坐标允许纹理调整大小而无需重新编写的代码或重新创建模型 （如.fbx 文件）。 这可能是因为规范化的坐标表示比率而不是特定的像素。 例如，(1，1) 将始终表示而不考虑纹理大小的右下角。
+归一化纹理坐标允许纹理调整大小而无需重写代码或重新创建模型（例如.fbx文件）。 因为归一化坐标表示的是比率而不是特定像素，才使之成为可能。 例如，无论纹理大小如何，（1, 1）将始终表示右下角。
 
-我们可以更改的纹理坐标分配要用于重复次数的单个变量：
+我们可以更改纹理坐标分配，以使用单个变量来表示重复次数：
 
 
 ```csharp
@@ -391,14 +388,16 @@ protected override void Initialize ()
 }
 ```
 
-这会导致重复 20 次的纹理：
+这会导致纹理重复 20 次：
+
 
 ![](part2-images/image10.png "这会导致重复 20 次的纹理")
 
 
-## <a name="rendering-vertices-with-models"></a>呈现模型的顶点
+## <a name="rendering-vertices-with-models"></a>渲染模型的顶点
 
-现在，我们平面将正确呈现，我们可以重新添加要同时查看所有内容的模型。 首先，我们将重新添加到的模型代码我们`Game1.Draw`方法 （包含已修改的位置）：
+现在，我们的平面被正确地渲染了，我们可以重新添加模型来查看一个整体的情况。 首先，我们将绘制模型的代码重新添加到我们的`Game1.Draw`方法中（包含已修改好的位置）：
+
 
 ```csharp
 protected override void Draw(GameTime gameTime)
@@ -419,7 +418,8 @@ protected override void Draw(GameTime gameTime)
 } 
 ```
 
-我们还将创建`Vector3`在`Game1`来代表我们照相机的位置。 我们将添加一个字段下的我们`checkerboardTexture`声明：
+我们还将在`Game1`类中创建一个`Vector3`实例来表示我们相机的位置。 我们将在`checkerboardTexture`声明下添加一个字段：
+
 
 ```csharp
 ...
@@ -428,7 +428,8 @@ Texture2D checkerboardTexture;
 Vector3 cameraPosition = new Vector3(0, 10, 10); 
 ```
 
-接下来，删除本地`cameraPosition`变量从`DrawModel`方法：
+接下来，从`DrawModel`方法中删除局部变量`cameraPosition`：
+
 
 ```csharp
 void DrawModel(Vector3 modelPosition)
@@ -450,7 +451,8 @@ void DrawModel(Vector3 modelPosition)
             ...
 ```
 
-同样删除本地`cameraPosition`变量从`DrawGround`方法：
+同样从`DrawGround`方法中删除局部变量`cameraPosition`：
+
 
 ```csharp
 void DrawGround()
@@ -465,11 +467,12 @@ void DrawGround()
     ... 
 ```
 
-现在如果我们运行的代码可以看到模型和完全在同一时间：
+现在，如果我们运行代码，我们可以同时看到模型和地面：
+
 
 ![](part2-images/image11.png "模型和一开始显示在同一时间")
 
-如果我们修改照相机的位置 （例如通过增加其 X 值，这在此情况下照相机向左移动），我们可以看到值会影响基础和模型：
+如果我们修改摄像机位置（例如通过增加其 X 值，在这种情况下摄像机将向左移动），我们可以看到该值会同时影响地面和模型：
 
 ```csharp
 Vector3 cameraPosition = new Vector3(15, 10, 10);
@@ -481,7 +484,7 @@ Vector3 cameraPosition = new Vector3(15, 10, 10);
 
 ## <a name="summary"></a>总结
 
-本演练演示了如何使用顶点数组执行自定义呈现。 在这种情况下，我们通过结合使用纹理我们基于顶点的呈现创建越过方格形终点的 floor 和`BasicEffect`，但提供的代码此处却作为任何 3D 渲染的基础。 我们还介绍了基于顶点呈现，可以混合使用相同的场景中的模型。
+本演练演示了如何使用顶点数组执行自定义渲染。 在这种情况下，我们通过将基于顶点的渲染与纹理和`BasicEffect`相结合来创建棋盘地板，此处提供的代码可用作任何 3D 渲染的基础。 我们还展示了基于顶点的渲染可以与同一场景中的模型一同被渲染。
 
 ## <a name="related-links"></a>相关链接
 
